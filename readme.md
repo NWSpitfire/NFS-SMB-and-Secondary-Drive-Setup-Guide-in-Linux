@@ -44,7 +44,7 @@ This guide was written for my VM's & servers running Ubuntu Server, as such YMMV
 
 (Breakdown)
 
-        sudo mount /[secondary drive] /[new mnt directory]
+        sudo mount /dev/[secondary drive] /mnt/[new mnt directory]
 
 5: Check secondary drive has mounted successfully under the specified directory.
 
