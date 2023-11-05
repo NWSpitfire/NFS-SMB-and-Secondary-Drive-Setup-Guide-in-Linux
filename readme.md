@@ -28,6 +28,8 @@ This guide was written for my VM's & servers running Ubuntu Server, as such YMMV
 
         sudo mkfs -t ntfs /dev/sdb
 
+###### NOTE 2: Press enter when mkfs asks to specify block size (leave blank). This will automatically format the partition to the max block size.
+
 (Breakdown)
 
         sudo mkfs -t [format] [secondary drive address]
