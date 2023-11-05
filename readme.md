@@ -14,11 +14,11 @@ This guide was written for my VM's & servers running Ubuntu Server, as such YMMV
 
 2: Format secondary hard drives
 
+###### NOTE: MKFS can format disks to either "ext4", "FAT32" or "NTFS"
+
 - To format the disk using linux standard ext4.
 
         sudo mkfs -t ext4 /dev/sdb
-
-###### NOTE: MKFS can format disks to either "ext4", "FAT32" or "NTFS"
 
 - To format the disk using FAT32.
 
@@ -84,7 +84,7 @@ This guide was written for my VM's & servers running Ubuntu Server, as such YMMV
 
 ![mount -f command output](https://github.com/NWSpitfire/Configure-Secondary-Drives-in-Linux/blob/76823a3dd788ff4c799c67957c1cfc57c7fa7bd7/images/mount-f-output.png)
 
-9: Reboot server
+9: Reboot server.
 
         sudo reboot
 
