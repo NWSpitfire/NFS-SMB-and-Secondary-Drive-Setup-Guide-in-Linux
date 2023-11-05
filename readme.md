@@ -1,4 +1,12 @@
+# Format, Mount & automatically mount on system boot secondary system drives in linux.
 
+This guide runs through how to Format the secondary drive(s), manually mount them for the first time in the system, then set them to automatically mount on system reboot using fstab.
+
+This guide was written for my VM's & servers running Ubuntu Server, as such YMMV following these commands on other non-debian/non-ubuntu OS's.
+
+![cover photo Dell SAN](https://cf-images.dustin.eu/cdn-cgi/image/fit=contain,format=auto,width=828/image/d200001004166267/dell-storage-scv2020.jpg)
+
+## Setup
 
 1: identify secondary hard drive(s)
 
@@ -66,7 +74,7 @@
 
         mount -a
 
-![mount -a command output](https://github.com/NWSpitfire/Configure-Secondary-Drives-in-Linux/blob/2867f3a8c0afd1bbc6aa386030328809dcbf4f73/images/fstab-auto-mounted-drive.png)
+![mount -a command output](https://github.com/NWSpitfire/Configure-Secondary-Drives-in-Linux/blob/76823a3dd788ff4c799c67957c1cfc57c7fa7bd7/images/mount-a-output.png)
 
 ###### NOTE: If the command runs without outputting any text, the command has run through successfully. If it returns a format error, something has gone wrong - recheck Step 7:.
 
@@ -74,7 +82,7 @@
 
         mount -f
 
-![mount -f command output](https://github.com/NWSpitfire/Configure-Secondary-Drives-in-Linux/blob/2867f3a8c0afd1bbc6aa386030328809dcbf4f73/images/fstab-auto-mounted-drive.png)
+![mount -f command output](https://github.com/NWSpitfire/Configure-Secondary-Drives-in-Linux/blob/76823a3dd788ff4c799c67957c1cfc57c7fa7bd7/images/mount-f-output.png)
 
 9: Reboot server
 
@@ -85,3 +93,8 @@
         lsblk
 
 ![console view showing mounted drive](https://github.com/NWSpitfire/Configure-Secondary-Drives-in-Linux/blob/2867f3a8c0afd1bbc6aa386030328809dcbf4f73/images/fstab-auto-mounted-drive.png)
+
+## Credits
+
+- Cover Photo: https://cf-images.dustin.eu/cdn-cgi/image/fit=contain,format=auto,width=828/image/d200001004166267/dell-storage-scv2020.jpg
+
