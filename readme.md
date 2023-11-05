@@ -40,6 +40,8 @@
 
         lsblk
 
+![console view showing mounted drive](https://github.com/NWSpitfire/Configure-Secondary-Drives-in-Linux/blob/2867f3a8c0afd1bbc6aa386030328809dcbf4f73/images/fstab-auto-mounted-drive.png)
+
 6: Set secondary drive to automatically mount to specified /mnt directory on boot.
 
         sudo nano /etc/fstab
@@ -64,11 +66,15 @@
 
         mount -a
 
+![mount -a command output](https://github.com/NWSpitfire/Configure-Secondary-Drives-in-Linux/blob/2867f3a8c0afd1bbc6aa386030328809dcbf4f73/images/fstab-auto-mounted-drive.png)
+
 ###### NOTE: If the command runs without outputting any text, the command has run through successfully. If it returns a format error, something has gone wrong - recheck Step 7:.
 
 - To check fstab without running the system call.
 
         mount -f
+
+![mount -f command output](https://github.com/NWSpitfire/Configure-Secondary-Drives-in-Linux/blob/2867f3a8c0afd1bbc6aa386030328809dcbf4f73/images/fstab-auto-mounted-drive.png)
 
 9: Reboot server
 
@@ -78,4 +84,4 @@
 
         lsblk
 
-![console view showing mounted drive](github.com)
+![console view showing mounted drive](https://github.com/NWSpitfire/Configure-Secondary-Drives-in-Linux/blob/2867f3a8c0afd1bbc6aa386030328809dcbf4f73/images/fstab-auto-mounted-drive.png)
