@@ -70,7 +70,7 @@ This guide was written for my VM's & servers running Ubuntu Server, as such YMMV
 
 ###### NOTE 3: If you are unsure of the disk's file system, instead of specifying the filesystem (ie ext4 or FAT32) you can instead specify "auto" and fstab should automatically determine the file system.
 
-###### NOTE 4: DO NOT REBOOT THE HOS UNTIL YOU HAVE COMPLETED STEP 8.
+###### NOTE 4: DO NOT REBOOT THE HOST UNTIL YOU HAVE COMPLETED STEP 8.
 
 8: Verify the changes to fstab are formatted correctly.
 
