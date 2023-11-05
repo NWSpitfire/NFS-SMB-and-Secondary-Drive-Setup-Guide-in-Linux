@@ -1,4 +1,4 @@
-# Format, Mount & automatically mount on system boot secondary system drives in linux.
+# Format, manually mount & mutomatically mount on system boot secondary system drives in linux.
 
 This guide runs through how to Format the secondary drive(s), manually mount them for the first time in the system, then set them to automatically mount on system reboot using fstab.
 
