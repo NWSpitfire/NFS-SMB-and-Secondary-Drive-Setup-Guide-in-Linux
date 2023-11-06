@@ -133,7 +133,7 @@ You must follow section i. in order **before** following section ii.
 
         //10.20.10.5/SATA-10TB-HDD/Main\ Storage\ Pool/My\ Album
 
-- Alternatively, you can use the correct use the correct ASCII code for space which is **040**. This will be **required** later in Section ii., Step: 6 when we come to automatically mounting the share on boot using fstab. Using the same directory "My Album" the path would look like;
+- Alternatively, you can use the correct ASCII code for space which is **040**. This will be **required** later in Section ii., Step: 6 when we come to automatically mounting the share on boot using fstab. Using the same directory "My Album" the path would look like;
 
         //10.20.10.5/SATA-10TB-HDD/Main\040Storage\040Pool/My\040Album
 
