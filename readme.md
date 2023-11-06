@@ -107,21 +107,21 @@ You must follow section i. in order **before** following section ii.
 
 1. Install CIFS-Utils from the package manager, this will allow us to mount our SMB share.
 
-                sudo apt install cifs-utils
+        sudo apt install cifs-utils
 
 2. Create a directory in /mnt to use as the mount point for the SMB server folder.
 
-                sudo mkdir /mnt/ER-10TB-SMB
+        sudo mkdir /mnt/ER-10TB-SMB
 
 ###### NOTE: You can call this anything, but if you are mounting multiple SMB Shares you MUST create seperate folders for each mount.
 
 3. Manually mount the SMB share to test the connection
 
-                sudo mount -t cifs -o username=Server //10.20.3.10/SATA-10TB-HDD/Files/examples /mnt/ER-10TB-SMB/
+        sudo mount -t cifs -o username=Server //10.20.3.10/SATA-10TB-HDD/Files/examples /mnt/ER-10TB-SMB/
 
 (Breakdown)                
                 
-                sudo mount -t cifs -o username=[SMB share Username] //[SMB Server IP Address]/[SMB Mount Path] /mnt/[Specific mount directory]/
+        sudo mount -t cifs -o username=[SMB share Username] //[SMB Server IP Address]/[SMB Mount Path] /mnt/[Specific mount directory]/
 
 ###### NOTE: This will bring up an prompt to enter the SMB Share's password. By manually mounting and inputting the password when prompted the password WILL NOT be persistent (ie after reboot the share will be unmounted). Follow Section ii. to create a persistent mount.
 
@@ -131,15 +131,15 @@ You must follow section i. in order **before** following section ii.
 
 - During manual mount the CIFS command will accept spaces if preceeded by a \ . For example if the directory I wanted to mount was called "My Album" in a dataset called "Main Storage Pool" the path would look like;
 
-                //10.20.10.5/SATA-10TB-HDD/Main\ Storage\ Pool/My\ Album
+        //10.20.10.5/SATA-10TB-HDD/Main\ Storage\ Pool/My\ Album
 
 - Alternatively, you can use the correct use the correct ASCII code for space which is **040**. This will be **required** later in Section ii., Step: 6 when we come to automatically mounting the share on boot using fstab. Using the same directory "My Album" the path would look like;
 
-                //10.20.10.5/SATA-10TB-HDD/Main\040Storage\040Pool/My\040Album
+        //10.20.10.5/SATA-10TB-HDD/Main\040Storage\040Pool/My\040Album
 
 4. If all steps above were followed correctly then the SMB Share should have mounted correctly. To verify this, check the mounted directories.
 
-                df
+        df
 
 ### ii. Automatic Mounting of an SMB Share
 
@@ -147,34 +147,34 @@ Assuming you have successfully mounted the SMB Share using the information above
 
 1. Create a hidden credentials file under a system directory. I use /etc but you can use any other system directory such as /root. This credentials file will contain passwords in **PLAIN TEXT**, so it needs to be hidden AND have the correct file permissions for such a file.
 
-                sudo nano /etc/.smbcreds
+        sudo nano /etc/.smbcreds
 
 ###### NOTE: The . before the filename means this file will be a hidden file. If you run a basic ls to list files the file will not be shown (although running an ls -a will show the hidden files).
 
 2. Add the SMB share's credentials into the file taking care to use no spaces in any of the inputs.
 
-                username=Server
-                password=password1234
+        username=Server
+        password=password1234
 
 2a. If your network uses Active Directory, you will need to add the domain to the bottom of the credentials file.
 
-                username=Server
-                password=password1234
-                domain=sitedomain
+        username=Server
+        password=password1234
+        domain=sitedomain
 
 2b. If you have multiple shares, do not create multiple credential files (you can, but theres not really much point). Add them all to the same file and point each share to the same credentials file.
 
-                username=Server
-                password=password1234
-                domain=sitedomain
+        username=Server
+        password=password1234
+        domain=sitedomain
 
-                username=Server1
-                password=password4321
-                domain=sitedomain                
+        username=Server1
+        password=password4321
+        domain=sitedomain                
 
 3. Once the credentials have been saved to the file, it needs to have its permissions restricted so only the root user can access the file.
 
-                sudo chmod 600 /etc/.smbcreds
+        sudo chmod 600 /etc/.smbcreds
 
 ###### NOTE: BE VERY CAREFUL WHEN RUNNING THIS COMMAND THAT THE PATH TO YOUR FILE IS CORRECT. IF THE PATH IS WRONG OR SPECIFIES THE WRONG PATH, BY RUNNING THIS AS SUDO YOU WILL SET THE PERMISSIONS OF THE TARGETED FILE/FOLDER AS ROOT R/W only.
 
@@ -184,15 +184,15 @@ Assuming you have successfully mounted the SMB Share using the information above
 
 4. Ensure the /.smbcreds file has successfully had the correct permissions applied to it. The permissions should be **rw-------**.
 
-                ls -l /etc/.smbcreds
+        ls -l /etc/.smbcreds
 
 5. Edit fstab.
 
-                sudo nano /etc/fstab
+        sudo nano /etc/fstab
 
 6. Add the path to your SMB server as well as the path to the mount folder created earlier as shown below.
 
-                //10.20.3.4/SATA-10TB-HDD/Main\040Storage\040Pool/My\040Album           /mnt/ER-10TB-SMB        cifs            noperm,_netdev,credentials=/etc/.smbcreds       0       0
+        //10.20.3.4/SATA-10TB-HDD/Main\040Storage\040Pool/My\040Album           /mnt/ER-10TB-SMB        cifs            noperm,_netdev,credentials=/etc/.smbcreds       0       0
 
 ###### NOTE: As discussed in Section i., Step: 3a the SMB share path must not contain any spaces of any kind. As such the path must be written with spaces represented in ASCII format using \040.
 
@@ -200,25 +200,25 @@ Assuming you have successfully mounted the SMB Share using the information above
 
 (Breakdown)
 
-             //[SMB Server IP Address]/[SMB Mount Path]         /mnt/[Specific mount directory]/        [connection protocol - cifs]            [skip permission check],[tell kernel to hold mount until after network is up],credentials=/path/to/credentials          0       0
+        //[SMB Server IP Address]/[SMB Mount Path]         /mnt/[Specific mount directory]/        [connection protocol - cifs]            [skip permission check],[tell kernel to hold mount until after network is up],credentials=/path/to/credentials          0       0
 
 7. After saving, verify the formatting of the new command in fstab is correct. The command should return no output if it has run successfully.
 
-                mount -a
+        mount -a
 
 ###### NOTE: If the command returns a formatting error, go back and run Step 6: again. Most importantly check for hidden spaces.
 
 8. Check SMB share is mounted by listing the mounted directories.
 
-                df
+        df
 
 9. Reboot server to test automatic mounting of the share.
 
-                sudo reboot.
+        sudo reboot.
 
 10. If all goes well you may see the SMB Share mount during system boot. It will show up as "[   OK   ] Mounted /mnt/ER-10TB-SMB. - If you don't see it, after the system has booted check the mounted directories.
 
-                df
+        df
 
 The share will now automatically mount on boot using the credentials file and the fstab path. 
 
@@ -231,25 +231,25 @@ This can be used if you dont want to remember your password but only want the SM
 
 2. To mount the SMB share manually run the manual mount command. There is no need to specify the share's username (as in the Section i. instructions), as it will be pulled from the credentials file
 
-                sudo mount -t cifs -o credentials=/etc/.smbcreds //10.20.3.4/SATA-10TB-HDD/Main\ Storage\ Pool/My\ Album /mnt/ER-10TB-SMB/
+        sudo mount -t cifs -o credentials=/etc/.smbcreds //10.20.3.4/SATA-10TB-HDD/Main\ Storage\ Pool/My\ Album /mnt/ER-10TB-SMB/
 
 ###### NOTE: In this case the command will accept spaces in the share path, so long as it is prefaced with a \ . However where possible use the ASCII value for space (040).
 
 3. If the command ran successfully it should output nothing, to check the share mounted correctly check mounted directories.
 
-                df
+        df
 
 ### iv. Unmounting an SMB Share.
 
 1. Identify the directory that needs unmounting.
 
-                df
+        df
 
 ###### NOTE: This command will unmount normal directories so check your command before running Step 2:.
 
 2. Unmount the SMB Share's mounted directory.
 
-                umount /mnt/ER-10TB-SMB
+        umount /mnt/ER-10TB-SMB
 
 ###### NOTE: This command is NOT -UNMOUNT- it is actually -UMOUNT- with no "N".
 
