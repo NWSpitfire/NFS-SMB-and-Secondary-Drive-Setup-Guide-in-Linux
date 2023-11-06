@@ -233,7 +233,7 @@ This can be used if you dont want to remember your password but only want the SM
 
         sudo mount -t cifs -o credentials=/etc/.smbcreds //10.20.3.4/SATA-10TB-HDD/Main\ Storage\ Pool/My\ Album /mnt/ER-10TB-SMB/
 
-###### NOTE: In this case the command will accept spaces in the share path, so long as it is prefaced with a \ . However where possible use the ASCII value for space (040).
+###### NOTE: In this case the command will accept spaces in the share path, so long as it is preceeded with a \ . However where possible use the ASCII value for space (040).
 
 3. If the command ran successfully it should output nothing, to check the share mounted correctly check mounted directories.
 
