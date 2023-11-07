@@ -204,9 +204,11 @@ Assuming you have successfully mounted the SMB Share using the information above
 
 7. After saving, verify the formatting of the new command in fstab is correct. The command should return no output if it has run successfully.
 
-        mount -a
+        sudo mount -a
 
-###### NOTE: If the command returns a formatting error, go back and run Step 6: again. Most importantly check for hidden spaces.
+###### NOTE: This command must be run with sudo, otherwise it will fail with a file permission error (only root is allowed to read credentials file).
+
+###### NOTE 2: If the command returns a formatting error, go back and run Step 6: again. Most importantly check for hidden spaces.
 
 8. Check SMB share is mounted by listing the mounted directories.
 
