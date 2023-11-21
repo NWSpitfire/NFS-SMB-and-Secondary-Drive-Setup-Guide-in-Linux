@@ -224,6 +224,29 @@ Assuming you have successfully mounted the SMB Share using the information above
 
 The share will now automatically mount on boot using the credentials file and the fstab path. 
 
+#### Using CIFS mounts with Docker mountpoints causing permissions issues with the container.
+
+This is because the containers UID/GID does not match the CIFS mount permissions, this can be fixed by ammending the /etc/fstab info with the correct GID/UID
+
+1. Identify the host mount permissions and owner.
+
+        ls -ld /path/to/mounted/volume
+
+###### NOTE: The permissions should list something like root:root (user:group) as the owner. This means that the user "root" and the group "root" own the share.
+
+2. Once the mount owner has been identified, identify owners UID/GID.
+
+        id username
+
+###### NOTE: If the owner identified in the previous command was "root" for example, then "username" = "root".
+
+3. Add the GID/UID to /etc/fstab
+
+        //10.20.3.10/WD-10TB-SATA/Storage/Test           /mnt/EF-10TB-Sync        cifs            noperm,_netdev,credentials=/etc/.smbcreds,uid=1000,gid=1000,forceuid,forcegid       0       0
+
+4. Reboot system to apply changes.
+
+        sudo reboot
 
 ### iii. EXTRA: Manual mounting of an SMB Share using a credentials file.
 
