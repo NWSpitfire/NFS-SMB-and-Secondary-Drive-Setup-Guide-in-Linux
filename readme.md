@@ -224,7 +224,7 @@ Assuming you have successfully mounted the SMB Share using the information above
 
 The share will now automatically mount on boot using the credentials file and the fstab path. 
 
-#### Using CIFS mounts with Docker mountpoints causing permissions issues with the container.
+### TROUBLESHOOTING - Using CIFS mounts with Docker mountpoints causing permissions issues with the container.
 
 This is because the containers UID/GID does not match the CIFS mount permissions, this can be fixed by ammending the /etc/fstab info with the correct GID/UID
 
@@ -285,3 +285,5 @@ This can be used if you dont want to remember your password but only want the SM
 - [CIFS FSTab](https://help.ubuntu.com/community/MountCifsFstab)
 
 - [Mounting CIFS FSTAB Securely](https://help.ubuntu.com/community/MountCifsFstabSecurely).
+
+- [Fixing Mount Permission issues with docker](https://community.bigbeartechworld.com/t/solving-docker-container-permission-issues-on-mounted-volumes/215)
