@@ -1,12 +1,16 @@
-# Format, manually mount & automatically mount on system boot secondary system & shared drives in linux.
+# Format, manually mount & automatically mount secondary system drives & Shared Storage (NFS/SMB) in linux.
 
-This guide runs through how to Format the secondary drive(s), manually mount them for the first time in the system, then set them to automatically mount on system reboot using fstab.
+This guide runs through 3 different setups;
+
+1. How to Format the secondary drive(s), manually mount them for the first time in the system, then set them to automatically mount on system reboot using fstab.
+2. How to mount an SMB Share on a Linux Host, & set them to automatically mount on system reboot using fstab.
+3. How to mount an NFS Share on a Linux Host, & set them to automatically mount on system reboot using fstab.
 
 This guide was written for my VM's & servers running Ubuntu Server, as such YMMV following these commands on other non-debian/non-ubuntu OS's.
 
 ![cover photo Dell SAN](https://cf-images.dustin.eu/cdn-cgi/image/fit=contain,format=auto,width=828/image/d200001004166267/dell-storage-scv2020.jpg)
 
-## Secondary System Drive Setup
+## 1- Secondary System Drive Setup
 
 1. identify secondary hard drive(s)
 
@@ -97,7 +101,7 @@ This guide was written for my VM's & servers running Ubuntu Server, as such YMMV
 ![console view showing mounted drive](https://github.com/NWSpitfire/Configure-Secondary-Drives-in-Linux/blob/2867f3a8c0afd1bbc6aa386030328809dcbf4f73/images/fstab-auto-mounted-drive.png)
 
 
-## CIFS Remote Shared Drive Setup
+## 2- CIFS Remote Shared Drive Setup
 
 This part of the guide is for mounting shared drives from a NAS or server using SMB protocol (with authentication). It is NOT for NFS Shares.
 
@@ -278,6 +282,103 @@ This can be used if you dont want to remember your password but only want the SM
 
 ###### NOTE: This command is NOT -UNMOUNT- it is actually -UMOUNT- with no "N".
 
+## 3- NFS Remote Shared Drive Setup
+
+This part of the guide is for mounting shared drives from a NAS or server using NFS protocol. It is NOT for SMB Shares.
+
+You must follow this in order of Section i. ii. iii. 
+
+### i. Setup of NFS Server & Infrastructure
+
+1. First ensure you have a specific network that you want to use for NFS. Ideally this would be a protected VLAN that does not have internet access. This will allow you to have a specific network that is just for NFS traffic, and is also safe from internet related vulnerabilites.
+
+For Example "VLAN 150" for NFS with a 172.10.0.0/24 range.
+
+2. Ensure the network switch is setup to ensure VLAN membership on the ports both the server and the client(s) will be connected to.
+
+###### NOTE: If you have issues later on with connecting to the NFS Share, try pinging the Server IP from Client, or vice versa. If this fails you have misconfigured your switch (ask me how i know...)
+
+3. Make sure the server is setup with your NFS datastore and that datastore has the NFS share enabled. I am using TrueNAS so this is quite simple.
+
+4. Ensure your client (in my case a VM) has a network adapter which is connected to the NFS VLAN. When setting this up, ENSURE it has a static IP (this is for security - see the next step).
+
+5. Ensure you have resticted your NFS share to only the clients that will be using it. NFS does not use credentials, so if this is not set, then anyone on the NFS VLAN will be able to access it (which is why we want the traffic on an internet blocked VLAN!). 
+
+For me in TrueNAS, I just added my VM's IP address to the "Hosts" tab. That means only that VM can access the share.
+
+### ii. Installation of NFS Client & Manual Mounting of an NFS Share
+
+1. Install NFS Client from the package manager, this will allow us to mount our NFS share.
+
+        sudo apt update
+        sudo apt install nfs-common
+
+2. Create a directory in /mnt to use as the mount point for the NFS server folder.
+
+        sudo mkdir /mnt/ER-10TB-NFS
+
+###### NOTE: You can call this anything, but if you are mounting multiple NFS Shares you MUST create seperate folders for each mount.
+
+3. Manually mount the NFS share to test the connection
+
+        sudo mount -t nfs 172.10.0.50:/mnt/Seagate-8TB-HDD/NFS_SHARE /mnt/ER-4TB-NFS/
+
+(Breakdown)                
+                
+        sudo mount -t nfs [NFS Server IP Address]:[NFS Mount Path] /mnt/[Specific mount directory]/
+
+###### NOTE: This will create a non-persisting mount. Follow Section iii. to create a persistent mount.
+
+###### NOTE 2: you must copy the full mount path from the server, ie. /mnt/Seagate-HDD/NFS_SHARE - Not just the /NFS_Share
+
+4. If all steps above were followed correctly then the SMB Share should have mounted correctly. To verify this, check the mounted directories.
+
+        df
+
+5. Verify the server is setup correctly by creating a test folder on the server from the host machine.
+
+        sudo mkdir /mnt/ER-4TB-NFS/
+
+###### NOTE: If this comes up with a permission denied error, check the permissions on the remote server.
+
+### iii. Automatic Mounting of an NFS Share
+
+Assuming you have successfully mounted the NFS Share using the information above, you now need to set the share to automatically mount on system boot using fstab.
+
+1. Edit fstab.
+
+        sudo nano /etc/fstab
+
+2. Add the path to your SMB server as well as the path to the mount folder created earlier as shown below.
+
+        172.10.0.50:/mnt/Seagate-8TB-HDD/NFS_SHARE /mnt/ER-4TB-NFS/  nfs      defaults    0       0
+
+###### NOTE: functions are seperated with TABS not with SPACES. Spaces will cause formatting errors.
+
+(Breakdown)
+
+        <file system>                                   <dir>      <type>    <options>  <dump>	<pass>
+
+3. After saving, verify the formatting of the new command in fstab is correct. The command should return no output if it has run successfully.
+
+        sudo mount -a
+
+###### NOTE: If the command returns a formatting error, go back and run Step 2: again. Most importantly check for hidden spaces.
+
+4. Check NFS share is mounted by listing the mounted directories.
+
+        df
+
+5. Reboot server to test automatic mounting of the share.
+
+        sudo reboot.
+
+6. If all goes well you may see the NFS Share mount during system boot. It will show up as "[   OK   ] Mounted /mnt/ER-10TB-NFS. - If you don't see it, after the system has booted check the mounted directories.
+
+        df
+
+The share will now automatically mount on boot. Ensure you have a static IP set as per Section i. Step 4. There are no credentials, a system has authority to access a share based upon its IP address. If that changes you will be disallowed from accessing the share!
+
 ## Credits
 
 - [Cover Photo](https://cf-images.dustin.eu/cdn-cgi/image/fit=contain,format=auto,width=828/image/d200001004166267/dell-storage-scv2020.jpg)
@@ -287,3 +388,5 @@ This can be used if you dont want to remember your password but only want the SM
 - [Mounting CIFS FSTAB Securely](https://help.ubuntu.com/community/MountCifsFstabSecurely).
 
 - [Fixing Mount Permission issues with docker](https://community.bigbeartechworld.com/t/solving-docker-container-permission-issues-on-mounted-volumes/215)
+
+- [NFS Share Mounting Linux](https://linuxize.com/post/how-to-mount-an-nfs-share-in-linux/)
