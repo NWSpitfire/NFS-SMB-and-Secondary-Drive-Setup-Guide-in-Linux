@@ -300,9 +300,11 @@ For Example "VLAN 150" for NFS with a 172.10.0.0/24 range.
 
 3. Make sure the server is setup with your NFS datastore and that datastore has the NFS share enabled. I am using TrueNAS so this is quite simple.
 
-4. Ensure your client (in my case a VM) has a network adapter which is connected to the NFS VLAN. When setting this up, ENSURE it has a static IP (this is for security - see the next step).
+###### NOTE: Make sure "maproot" is set to root in TrueNAS or there will be write issues with the share!
 
-5. Ensure you have resticted your NFS share to only the clients that will be using it. NFS does not use credentials, so if this is not set, then anyone on the NFS VLAN will be able to access it (which is why we want the traffic on an internet blocked VLAN!). 
+5. Ensure your client (in my case a VM) has a network adapter which is connected to the NFS VLAN. When setting this up, ENSURE it has a static IP (this is for security - see the next step).
+
+6. Ensure you have resticted your NFS share to only the clients that will be using it. NFS does not use credentials, so if this is not set, then anyone on the NFS VLAN will be able to access it (which is why we want the traffic on an internet blocked VLAN!). 
 
 For me in TrueNAS, I just added my VM's IP address to the "Hosts" tab. That means only that VM can access the share.
 
