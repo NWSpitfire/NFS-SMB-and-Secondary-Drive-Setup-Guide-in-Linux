@@ -54,7 +54,7 @@ This guide was written for my VM's & servers running Ubuntu Server, as such YMMV
 
         lsblk
 
-![console view showing mounted drive](https://github.com/NWSpitfire/Configure-Secondary-Drives-in-Linux/blob/2867f3a8c0afd1bbc6aa386030328809dcbf4f73/images/fstab-auto-mounted-drive.png)
+![console view showing mounted drive](images/fstab-auto-mounted-drive.png)
 
 6. Set secondary drive to automatically mount to specified /mnt directory on boot.
 
@@ -80,7 +80,7 @@ This guide was written for my VM's & servers running Ubuntu Server, as such YMMV
 
         mount -a
 
-![mount -a command output](https://github.com/NWSpitfire/Configure-Secondary-Drives-in-Linux/blob/76823a3dd788ff4c799c67957c1cfc57c7fa7bd7/images/mount-a-output.png)
+![mount -a command output](images/mount-a-output.png)
 
 ###### NOTE: If the command runs without outputting any text, the command has run through successfully. If it returns a format error, something has gone wrong - recheck Step 7:.
 
@@ -88,7 +88,7 @@ This guide was written for my VM's & servers running Ubuntu Server, as such YMMV
 
         mount -f
 
-![mount -f command output](https://github.com/NWSpitfire/Configure-Secondary-Drives-in-Linux/blob/76823a3dd788ff4c799c67957c1cfc57c7fa7bd7/images/mount-f-output.png)
+![mount -f command output](images/mount-f-output.png)
 
 9. Reboot server.
 
@@ -98,7 +98,7 @@ This guide was written for my VM's & servers running Ubuntu Server, as such YMMV
 
         lsblk
 
-![console view showing mounted drive](https://github.com/NWSpitfire/Configure-Secondary-Drives-in-Linux/blob/2867f3a8c0afd1bbc6aa386030328809dcbf4f73/images/fstab-auto-mounted-drive.png)
+![console view showing mounted drive](images/fstab-auto-mounted-drive.png)
 
 
 ## 2- CIFS Remote Shared Drive Setup
