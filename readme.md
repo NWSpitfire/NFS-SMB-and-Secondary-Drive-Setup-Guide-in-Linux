@@ -1,4 +1,4 @@
-# Format, manually mount & automatically mount secondary system drives & Shared Storage (NFS/SMB) in linux.
+# Format, manually mount & automatically mount secondary system drives, S3 Compatible Block Sorage & Shared Storage (NFS/SMB) in linux.
 
 This guide runs through 3 different setups;
 
@@ -380,6 +380,62 @@ Assuming you have successfully mounted the NFS Share using the information above
         df
 
 The share will now automatically mount on boot. Ensure you have a static IP set as per Section i. Step 4. There are no credentials, a system has authority to access a share based upon its IP address. If that changes you will be disallowed from accessing the share!
+
+## S3 Block Storage
+
+This is a guide to mounting an S3 Bucket to a FUSE directory in Linux.
+
+1. Install the AWSCLI and S3FS onto the system
+
+```bash
+sudo apt update
+sudo apt install awscli s3fs
+s3fs --version
+```
+
+2. Generate the required password file.
+
+```bash
+echo <ACCESS_KEY_ID>:<ACCESS_SECRET> > /home/<user>/.passwd-s3fs
+chmod 600 /home/user/.passwd-s3fs
+```
+
+3. Mount the bucket temporarily using the command line.
+This step will need the following information.
+- Bucket Name
+- Password File (from step 2)
+- S3 Server URL
+- S3 Server Endpoint
+
+```bash
+sudo mkdir /mnt/s3-bucket
+
+sudo s3fs <bucket_name> /mnt/s3-bucket -o passwd_file=~/.passwd-s3fs -o url=http://<server_url>:9000 -o no_check_certificate -o endpoint=<server_endpoint> -o dbglevel=info -f -o curldbg -o use_path_request_style -o allow_other
+```
+
+To escape this, press `CTRL+C`. 
+
+4. Modify `fstab` so the bucket mounts on boot
+```bash
+sudo cp /etc/fstab /etc/fstab.bkp
+
+sudo nano /etc/fstab
+
+<BUCKET_NAME> <MOUNT_FOLDER> fuse.s3fs _netdev,passwd_file=/home/<user>/.passwd-s3fs,host=http://<server_url>:9000,endpoint=<server_endpoint>,use_path_request_style,allow_other 0 0
+```
+
+5. Verify the changes are valid, and mount the folder
+```bash
+sudo mount -a
+
+sudo mount -f
+```
+
+6. Reboot and check the file system to ensure S3 Bucket is mounted after boot
+```bash
+sudo duf
+```
+
 
 ## Credits
 
